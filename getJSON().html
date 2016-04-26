@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery.getJSON demo</title>
+  <style>
+  img {
+    height: 100px;
+    float: left;
+	margin: 0 20px 20px 0;
+  }
+  button {
+  	width:100px;
+	height:50px;
+	margin:20px;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+
+<button>test JSON</button>
+<div id="hienthi"></div>
+
+
+<div id="images"></div>
+ 
+<script>
+(function() {
+  var flickerAPI = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+  $.getJSON( flickerAPI, {
+    tags: "mount rainier",
+    tagmode: "any",
+    format: "json"
+  })
+    .done(function( data ) {
+      $.each( data.items, function( i, item ) {
+        $( "<img>" ).attr( { "src": item.media.m, "alt": "alt attribute" } ).appendTo( "#images" );
+        if ( i === 2 ) {
+          return false;
+        }
+      });
+    });
+})();
+
+$("button").click(function(){
+	//var demoAPI = "http://echo.jsontest.com/insert-key-here/insert-value-here/key/value";
+	var demoJSON = "http://www.json-generator.com/api/json/get/cpudoateXm?indent=2";	
+	$.getJSON(demoJSON)
+	.done(function(data){
+		var html = "<ul>";
+		var i = 5;
+		$.each(data, function(key, value){
+			if (value.index < i ){
+				html += "<li>";
+				html += "<h3>Company name: " + value.company + "</h3></br>";
+				html += "<strong>About:</strong> " + value.about + "</br>";
+				html += "<strong>Email:</strong> " + value.email + "</br>";
+				html += " <strong>Tags:</strong> ";			
+				$.each(value.tags, function(index, value){
+					html += value + ", ";
+				});
+				html += "</br>";
+				$.each(value.friends, function(key, value){
+					html += "<strong>Friend " + value.id + ":</strong> " + value.name + "</br>";				
+				});
+				html += "</br></br>";
+				html += "</li>";
+			}else { return false;}
+		});
+		html += "</ul>";
+		$("#hienthi").append(html);
+		$("button").hide();
+	});
+});
+</script>
+ 
+</body>
+</html>
